@@ -22,6 +22,7 @@
 <p>
     <paper-button raised onclick="spawn()">Spawn Notification</paper-button>
     <paper-button raised onclick="spawn5()">Spawn 5</paper-button>
+    <paper-button raised onclick="spawna()">Spawn Auto-Closing</paper-button>
     <paper-button raised onclick="window.notifier.removeOldest()">Remove Oldest</paper-button>
     <paper-button raised onclick="window.notifier.removeAll()">Remove All</paper-button>
 </p>
@@ -52,7 +53,7 @@
             'When I was little I had a car door slammed shut on my hand. I still remember it quite vividly.',
             'I am never at home on Sundays.', 'I love eating toasted cheese and tuna sandwiches.'];
 
-        window.spawn    = function() {
+        window.spawn    = function(custom) {
             var options = {
                 color:  colors[Math.round(Math.random() * (colors.length - 1))],
                 title:  names[Math.round(Math.random() * (names.length - 1))],
@@ -83,6 +84,11 @@
                     options.icon = 'heart';
                     break;
             }
+            if(custom) {
+                for(var key in custom) {
+                    options[key] = custom[key];
+                }
+            }
             notifier.create(options);
         };
         window.spawn5   = function() {
@@ -99,6 +105,9 @@
                     });
                 });
             });
+        };
+        window.spawna   = function() {
+            window.spawn({autoclose: 5000});
         };
     }
     if(window.WebComponents) {

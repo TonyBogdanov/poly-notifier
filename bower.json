@@ -12,15 +12,13 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "demo",
-    "**/*.scss",
-    "**/*.css"
+    "tests"
   ],
   "dependencies": {
     "polymer": "^1.6.1",
     "paper-ripple": "*",
-    "font-awesome": "^4.6.3"
+    "font-awesome": "^4.6.3",
+    "poly-cover-image": "*"
   },
   "devDependencies": {
     "iron-component-page": "^1.1.7",

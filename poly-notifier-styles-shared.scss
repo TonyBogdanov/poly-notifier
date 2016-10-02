@@ -4,7 +4,7 @@
   display: block;
   position: fixed;
   left: 0;
-  top: px(-1);
+  top: -1px;
   width: 100%;
   height: auto;
   background: #eee;
@@ -35,7 +35,7 @@
         width: 100%;
         height: auto;
         background: #fff;
-        border-top: #d9d9d9 px(1) solid;
+        border-top: #d9d9d9 1px solid;
         font-family: 'Roboto', sans-serif;
         font-size: 14px;
         line-height: 1.5;
@@ -45,10 +45,21 @@
           @include box-sizing(border-box);
         }
 
+        & > .header {
+          font-size: 12px;
+          color: #bbb;
+          padding: 18px 18px 0 18px;
+          margin-bottom: -13px;
+        }
+
         & > .content {
-          display: block;
+          min-height: 78px;
           position: relative;
-          padding: px(18);
+          padding: 18px;
+
+          @include display(flex);
+          @include flex-direction(column);
+          @include justify-content(center);
 
           & > .title {
             display: block;
@@ -65,11 +76,20 @@
           & > .icon {
             display: block;
             position: absolute;
-            top: px(18);
-            right: px(18);
-            width: px(42);
-            height: px(42);
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
             border-radius: 100%;
+            overflow: hidden;
+          }
+
+          // opacity transitions sometimes makes a nasty flicker and no border-radius
+          & > .image > poly-cover-image {
+            @include polymer-mixin(--poly-cover-image-image) {
+              border-radius: 100%;
+              overflow: hidden;
+            }
           }
 
           & > .icon {
@@ -83,14 +103,14 @@
           }
 
           &[data-image] {
-            padding-right: px(78);
+            padding-right: 78px;
           }
         }
 
         & > .actions {
           display: block;
           background: #eee;
-          padding: px(13) px(5);
+          padding: 13px 5px;
 
           button {
             display: inline-block;
@@ -98,15 +118,15 @@
             font-weight: 700;
             text-transform: uppercase;
             border: 0;
-            border-radius: px(2);
+            border-radius: 2px;
             background: transparent;
-            padding: px(8);
-            margin: 0 px(5);
+            padding: 8px;
+            margin: 0 5px;
             outline: none;
             cursor: pointer;
 
             span {
-              font-size: px(13);
+              font-size: 13px;
               color: #007bc3;
             }
           }
