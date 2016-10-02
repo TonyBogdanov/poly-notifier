@@ -2,7 +2,7 @@
 
 [![Buy Me a Coffee](http://static.tonybogdanov.com/github/coffee.svg)](http://ko-fi.co/1236KUKJNC96B)
 
-[Demo & Documentation](http://tonybogdanov.github.io/poly-notifier/components/poly-notifier/)
+[Demo & Documentation](http://tonybogdanov.github.io/poly-notifier/bower_components/poly-notifier/)
 
 `<poly-notifier>` provides a centralized way of delivering notifications on web–based environments.
 
