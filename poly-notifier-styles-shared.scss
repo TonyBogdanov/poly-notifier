@@ -1,0 +1,117 @@
+@import "config";
+
+:host {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: px(-1);
+  width: 100%;
+  height: auto;
+  background: #eee;
+  z-index: 99999;
+
+  @include box-sizing(border-box);
+  @include transition(box-shadow $fast $swift);
+
+  &:not([empty]) {
+    @include shadow-material(2);
+  }
+
+  ::content .notification {
+    display: block;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+
+    @include transition(height $fast $swift);
+
+    & > .wrapper {
+      display: block;
+      width: 100%;
+      height: 100em; // large enough to fit any content
+
+      & > .sizer {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #fff;
+        border-top: #d9d9d9 px(1) solid;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &,
+        * {
+          @include box-sizing(border-box);
+        }
+
+        & > .content {
+          display: block;
+          position: relative;
+          padding: px(18);
+
+          & > .title {
+            display: block;
+            font-weight: 500;
+            color: #212121;
+          }
+
+          & > .text {
+            display: block;
+            color: #757575;
+          }
+
+          & > .image,
+          & > .icon {
+            display: block;
+            position: absolute;
+            top: px(18);
+            right: px(18);
+            width: px(42);
+            height: px(42);
+            border-radius: 100%;
+          }
+
+          & > .icon {
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bc3;
+
+            @include display(flex);
+            @include align-items(center);
+            @include justify-content(center);
+          }
+
+          &[data-image] {
+            padding-right: px(78);
+          }
+        }
+
+        & > .actions {
+          display: block;
+          background: #eee;
+          padding: px(13) px(5);
+
+          button {
+            display: inline-block;
+            position: relative;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 0;
+            border-radius: px(2);
+            background: transparent;
+            padding: px(8);
+            margin: 0 px(5);
+            outline: none;
+            cursor: pointer;
+
+            span {
+              font-size: px(13);
+              color: #007bc3;
+            }
+          }
+        }
+      }
+    }
+  }
+}
