@@ -205,10 +205,10 @@
          * | `text` | Notification text. |
          * | `image` | Optional notification image URL. Takes precedence over `icon`. |
          * | `icon` | Optional notification icon (instead of image). It must be a [FontAwesome](http://fontawesome.io/icons/) icon name, e.g. `globe`. |
-         * | `actions` | Optional array of action buttons represented by an object like (see below). |
+         * | `actions` | Optional array of action buttons represented by an object (see below). |
          * | `autoclose` | Optional number of milliseconds before the notification auto-closes. |
          *
-         * A single `actions` object looks like this:
+         * A single `actions` object entry looks like this:
          *
          * ```
          * {
@@ -221,10 +221,11 @@
          *
          * `remove` - to remove the current notification.
          *
-         * It can also be a `function`. Upon tapping such an action button this function will be passed the
-         * `<poly-notifier>` element in the `this` context, the notification `options` object
+         * Or a `function`, which will be passed the `<poly-notifier>` element in the `this` context, the notification `options` object
          * (used to create the notification) as second argument and the current action object
          * (from `options.actions`) as third argument.
+         *
+         * ---
          *
          * Example:
          *
@@ -239,6 +240,7 @@
          *
          * | Item | Description |
          * |-|-|
+         * | `options` | The original `options` object used to create the notification also including some useful entries such as `id` and `createdAt`. |
          * | `remove()` | Removes the notification |
          *
          * @param options
@@ -257,6 +259,7 @@
             }
 
             return {
+                options:                options,
                 remove:                 function() {
                     this.remove(options.id);
                 }.bind(this)
