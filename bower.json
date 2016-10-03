@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "polymer": "^1.6.1",
-    "paper-ripple": "*",
+    "paper-ripple": "PolymerElements/paper-ripple#^1.0.0",
     "font-awesome": "^4.6.3",
     "poly-cover-image": "*"
   },
