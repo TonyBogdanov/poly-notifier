@@ -2,7 +2,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../font-roboto/roboto.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
-<link rel="import" href="../poly-cover-image/poly-cover-image.html">
+<link rel="import" href="../poly-quick-image/poly-quick-image.html">
 <link rel="import" href="poly-notifier-styles-shared.html">
 
 <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
@@ -28,7 +28,7 @@
                             <div class="content" data-image$="[[item.image]]">
                                 <template is="dom-if" if="[[_hasImage(item)]]">
                                     <div class="image">
-                                        <poly-cover-image image="[[item.image]]"></poly-cover-image>
+                                        <poly-quick-image src="[[item.image]]" sizing="cover"></poly-quick-image>
                                     </div>
                                 </template>
 
