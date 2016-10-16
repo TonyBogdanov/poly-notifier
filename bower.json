@@ -5,7 +5,9 @@
     "Tony Bogdanov <tonybogdanov@gmail.com>"
   ],
   "description": "Notifications for the web",
-  "keywords": ["web-components"],
+  "keywords": [
+    "web-components"
+  ],
   "main": "poly-notifier.html",
   "license": "MIT",
   "ignore": [
@@ -18,8 +20,8 @@
   "dependencies": {
     "polymer": "^1.6.1",
     "paper-ripple": "PolymerElements/paper-ripple#^1.0.0",
-    "font-awesome": "^4.6.3",
-    "poly-quick-image": "*"
+    "poly-quick-image": "*",
+    "poly-vendor-font-awesome": "*"
   },
   "devDependencies": {
     "iron-component-page": "^1.1.7",
