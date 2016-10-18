@@ -13,9 +13,15 @@ install that via:
 
     npm install -g bower
 
-Then, go ahead and download the element's dependencies:
+And init your project with:
 
-    bower install
+    bower init
+
+## Installation
+
+Install the component with:
+
+    bower install --save poly-notifier
 
 ## Playing With Your Element
 
