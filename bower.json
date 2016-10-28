@@ -21,7 +21,8 @@
     "polymer": "^1.6.1",
     "paper-ripple": "PolymerElements/paper-ripple#^1.0.0",
     "poly-quick-image": "*",
-    "poly-vendor-font-awesome": "*"
+    "poly-vendor-font-awesome": "*",
+    "poly-behavior-translatable": "*"
   },
   "devDependencies": {
     "iron-component-page": "^1.1.7",

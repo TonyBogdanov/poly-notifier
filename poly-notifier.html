@@ -2,6 +2,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../font-roboto/roboto.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../poly-behavior-translatable/poly-behavior-translatable.html">
 <link rel="import" href="../poly-vendor-font-awesome/poly-vendor-font-awesome.html">
 <link rel="import" href="../poly-quick-image/poly-quick-image.html">
 <link rel="import" href="poly-notifier-styles-shared.html">
@@ -21,7 +22,7 @@
                     <div class="wrapper">
                         <div class="sizer">
                             <template is="dom-if" if="[[_hasHeader(item)]]">
-                                <div class="header">Closing in [[_autoCloseRemaining(item, _tick)]]</div>
+                                <div class="header">[[_closingText(item, _tick, translations)]]</div>
                             </template>
 
                             <div class="content" data-image$="[[item.image]]">
@@ -63,6 +64,10 @@
     Polymer({
         is:                             'poly-notifier',
 
+        behaviors:                      [
+            Poly.TranslatableBehavior
+        ],
+
         properties:                     {
             _items:                     {
                 type:                   Array,
@@ -91,6 +96,11 @@
 
         _hashMap:                       'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890',
         _locked:                        false,
+
+        _closingText:                   function(item) {
+            return this.translateWithFallback('Closing in %s', 'Closing in %s').replace(/%s/g,
+                    this._autoCloseRemaining(item));
+        },
 
         _update:                        function() {
             this._setEmpty(0 == this._items.length);
@@ -204,6 +214,7 @@
          * | `text` | Notification text. |
          * | `image` | Optional notification image URL. Takes precedence over `icon`. |
          * | `icon` | Optional notification icon (instead of image). It must be a [FontAwesome](http://fontawesome.io/icons/) icon name, e.g. `globe`. |
+         * | `color` | Optional notification color. If not specified, one will be automatically chosen based on the contents. |
          * | `actions` | Optional array of action buttons represented by an object (see below). |
          * | `autoclose` | Optional number of milliseconds before the notification auto-closes. |
          *
