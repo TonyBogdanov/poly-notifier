@@ -1,0 +1,24 @@
+{
+  "name": "poly-behavior-translatable",
+  "homepage": "https://github.com/TonyBogdanov/poly-behavior-translatable",
+  "authors": [
+    "Tony Bogdanov <tonybogdanov@gmail.com>"
+  ],
+  "description": "A Polymer behavior for \"quick and dirty\" internationalization",
+  "keywords": ["web-components"],
+  "main": "poly-behavior-translatable.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.6.1"
+  },
+  "devDependencies": {
+    "iron-component-page": "^1.1.7"
+  }
+}

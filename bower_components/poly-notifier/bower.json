@@ -1,0 +1,32 @@
+{
+  "name": "poly-notifier",
+  "homepage": "https://github.com/TonyBogdanov/poly-notifier",
+  "authors": [
+    "Tony Bogdanov <tonybogdanov@gmail.com>"
+  ],
+  "description": "Notifications for the web",
+  "keywords": [
+    "web-components"
+  ],
+  "main": "poly-notifier.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.6.1",
+    "paper-ripple": "PolymerElements/paper-ripple#^1.0.0",
+    "poly-quick-image": "*",
+    "poly-vendor-font-awesome": "*",
+    "poly-behavior-translatable": "*"
+  },
+  "devDependencies": {
+    "iron-component-page": "^1.1.7",
+    "bottle": "*",
+    "paper-button": "^1.0.13"
+  }
+}

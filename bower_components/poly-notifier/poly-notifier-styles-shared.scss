@@ -1,0 +1,137 @@
+@import "config";
+
+:host {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: -1px;
+  width: 100%;
+  height: auto;
+  background: #eee;
+  z-index: 99999;
+
+  @include box-sizing(border-box);
+  @include transition(box-shadow $fast $swift);
+
+  &:not([empty]) {
+    @include shadow-material(2);
+  }
+
+  ::content .notification {
+    display: block;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+
+    @include transition(height $fast $swift);
+
+    & > .wrapper {
+      display: block;
+      width: 100%;
+      height: 100em; // large enough to fit any content
+
+      & > .sizer {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #fff;
+        border-top: #d9d9d9 1px solid;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &,
+        * {
+          @include box-sizing(border-box);
+        }
+
+        & > .header {
+          font-size: 12px;
+          color: #bbb;
+          padding: 18px 18px 0 18px;
+          margin-bottom: -13px;
+        }
+
+        & > .content {
+          min-height: 78px;
+          position: relative;
+          padding: 18px;
+
+          @include display(flex);
+          @include flex-direction(column);
+          @include justify-content(center);
+
+          & > .title {
+            display: block;
+            font-weight: 500;
+            color: #212121;
+          }
+
+          & > .text {
+            display: block;
+            color: #757575;
+          }
+
+          & > .image,
+          & > .icon {
+            display: block;
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            border-radius: 100%;
+            overflow: hidden;
+          }
+
+          // opacity transitions sometimes makes a nasty flicker and no border-radius
+          & > .image > poly-cover-image {
+            @include polymer-mixin(--poly-cover-image-image) {
+              border-radius: 100%;
+              overflow: hidden;
+            }
+          }
+
+          & > .icon {
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bc3;
+
+            @include display(flex);
+            @include align-items(center);
+            @include justify-content(center);
+          }
+
+          &[data-image] {
+            padding-right: 78px;
+          }
+        }
+
+        & > .actions {
+          display: block;
+          background: #eee;
+          padding: 13px 5px;
+
+          button {
+            display: inline-block;
+            position: relative;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 0;
+            border-radius: 2px;
+            background: transparent;
+            padding: 8px;
+            margin: 0 5px;
+            outline: none;
+            cursor: pointer;
+
+            span {
+              font-size: 13px;
+              color: #007bc3;
+            }
+          }
+        }
+      }
+    }
+  }
+}

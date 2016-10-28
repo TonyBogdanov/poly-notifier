@@ -1,0 +1,152 @@
+<!-- Dependencies -->
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+    window.Poly = window.Poly || {};
+
+    /**
+     * `Poly.TranslatableBehavior` provides a [Polymer](https://polymer-project.org)
+     * [behavior](https://www.polymer-project.org/1.0/docs/devguide/behaviors) for
+     * "quick and dirty" internationalization.
+     *
+     * Use the `translations` property to set `key: value` pairs of all available translations in the currently active
+     * locale on any element that implements this behavior.
+     *
+     * @polymerBehavior Poly.TranslatableBehavior
+     * @demo demo/index.html
+     */
+    Poly.TranslatableBehavior = {
+        properties: {
+            /**
+             * Use this property to define a `key: value` pairs of all available translations at element creation time.
+             *
+             * Refer to `setTranslation()` for adding additional translations later on.
+             */
+            translations: {
+                type: Object,
+                value: function() {
+                    return {};
+                }
+            }
+        },
+
+        _translatePlural: function(plural, keys, fallback) {
+            if(keys.length < plural - 1) {
+                return fallback;
+            }
+            return this.translateWithFallback(keys[plural], fallback);
+        },
+
+        /**
+         * Determines whether a translation for the specified `key` exists and returns a `Boolean`.
+         *
+         * Don't forget to pass `translations` as a second argument in data bindings to inject it as dependency,
+         * otherwise this might fail.
+         *
+         * @param key
+         * @returns {boolean}
+         */
+        hasTranslation: function(key) {
+            return this.translations.hasOwnProperty(key);
+        },
+
+        /**
+         * Dynamically adds a new translation.
+         *
+         * @param key
+         * @param translation
+         * @returns {Poly.TranslatableBehavior}
+         */
+        setTranslation: function(key, translation) {
+            var newTranslations = {};
+            for(var oldKey in this.translations) {
+                if(this.translations.hasOwnProperty(oldKey)) {
+                    newTranslations[oldKey] = this.translations[oldKey];
+                }
+            }
+            newTranslations[key] = translation;
+            this.translations = newTranslations;
+            return this;
+        },
+
+        /**
+         * Retrieves a translation string for the specified `key` if it exists. Returns `undefined` otherwise.
+         *
+         * Don't forget to pass `translations` as a second argument in data bindings to inject it as dependency,
+         * otherwise this might fail.
+         *
+         * @param key
+         * @returns {*}
+         */
+        translate: function(key) {
+            if(!this.hasTranslation(key)) {
+                return;
+            }
+            return this.translations[key];
+        },
+
+        /**
+         * Same as `translate()` except you can specify a fallback translation string as second argument in case the
+         * specified `key` doesn't exist.
+         *
+         * Don't forget to pass `translations` as a third argument in data bindings to inject it as dependency,
+         * otherwise this might fail.
+         *
+         * @param key
+         * @param fallback
+         */
+        translateWithFallback: function(key, fallback) {
+            var translation = this.translate(key);
+            return 'undefined' == typeof translation ? fallback : translation;
+        },
+
+        /**
+         * Use this to translate plural forms.
+         *
+         * Pass one or more translation keys as the first, second, third etc. argument to be used for respectively
+         * the zeroth, first, second etc. form of a translation. Immediately after that you must pass a valid `Integer`
+         * number specifying the plural which should be used.
+         *
+         * This method is especially useful when you don't know the plural form that needs to be used in
+         * advance and retrieve it from a variable.
+         *
+         * The method can support unlimited number of plural forms and will stop inspecting after the first occurrence
+         * of an `Integer`. If no `Integer` is passed an exception will be thrown.
+         *
+         * Don't forget to pass `translations` at the end of the argument list in data bindings to inject it
+         * as dependency, otherwise this might fail.
+         *
+         * @returns {*}
+         */
+        translatePlural: function() {
+            for(var i = 0; i < arguments.length; i++) {
+                if(!isNaN(arguments[i])) {
+                    return this._translatePlural(arguments[i], Array.from(arguments).slice(0, i));
+                }
+            }
+            throw "Poly.TranslatableBehavior: You must pass a valid plural integer to translatePlural()";
+        },
+
+        /**
+         * Same as `translatePlural()` except you can specify a fallback translation string immediately after the
+         * plural integer to be used in case the resolved translation key doesn't exist.
+         *
+         * Don't forget to pass `translations` at the end of the argument list in data bindings to inject it
+         * as dependency, otherwise this might fail.
+         *
+         * @returns {*}
+         */
+        translatePluralWithFallback: function() {
+            for(var i = 0; i < arguments.length; i++) {
+                if(!isNaN(arguments[i])) {
+                    if('string' != typeof arguments[i + 1]) {
+                        throw "Poly.TranslatableBehavior: You must pass a valid translation string immediately" +
+                        " after the plural integer to translatePluralFallback()";
+                    }
+                    return this._translatePlural(arguments[i], Array.from(arguments).slice(0, i), arguments[i + 1]);
+                }
+            }
+            throw "Poly.TranslatableBehavior: You must pass a valid plural integer to translatePluralFallback()";
+        }
+    };
+</script>

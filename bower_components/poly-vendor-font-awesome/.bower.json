@@ -1,0 +1,32 @@
+{
+  "name": "poly-vendor-font-awesome",
+  "homepage": "https://github.com/TonyBogdanov/poly-vendor-font-awesome",
+  "authors": [
+    "Tony Bogdanov <tonybogdanov@gmail.com>"
+  ],
+  "description": "Unambiguous loading of FontAwesome",
+  "keywords": [
+    "web-components"
+  ],
+  "main": "poly-vendor-font-awesome.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "^4.6.3"
+  },
+  "_release": "f619acf0aa",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "f619acf0aa1dd541072ee6df41590f1095b8a431"
+  },
+  "_source": "https://github.com/TonyBogdanov/poly-vendor-font-awesome.git",
+  "_target": "*",
+  "_originalSource": "poly-vendor-font-awesome"
+}

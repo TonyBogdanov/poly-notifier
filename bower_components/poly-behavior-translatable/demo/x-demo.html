@@ -1,0 +1,104 @@
+<!-- Dependencies -->
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../poly-behavior-translatable.html">
+
+<dom-module id="x-demo">
+    <template>
+        <strong><code>translations</code> property:</strong>
+        <pre>[[_dump(translations)]]</pre>
+
+        <p>
+            <strong><code>hasTranslation('test1', translations)</code></strong>
+            <pre>[[hasTranslation('test1', translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>hasTranslation('test2', translations)</code></strong>
+            <pre>[[hasTranslation('test2', translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translate('test1', translations)</code></strong>
+            <pre>[[translate('test1', translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translateWithFallback('test2', 'No such key', translations)</code></strong>
+            <pre>[[translateWithFallback('test2', 'No such key', translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong>Dynamically add translations</strong><br /><br />
+            <button type="button" on-tap="_addTranslation">Add translation</button>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 1, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 2, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 3, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 4, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 0, translations)</code></strong>
+        <pre>[[translatePlural('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 5, translations)]]</pre>
+        </p>
+        <br />
+
+        <p>
+            <strong><code>translatePluralWithFallback('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 12, 'A fallback', translations)</code></strong>
+        <pre>[[translatePluralWithFallback('plural0', 'plural1', 'plural2', 'plural3', 'plural4', 'plural5', 12, 'A fallback', translations)]]</pre>
+        </p>
+        <br />
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'x-demo',
+
+        behaviors: [
+            Poly.TranslatableBehavior
+        ],
+
+        _addTranslation: function(e) {
+            if(e.currentTarget.hasAttribute('disabled')) {
+                return;
+            }
+            e.currentTarget.setAttribute('disabled', 'disabled');
+            this.setTranslation('test2', 'Added dynamically');
+        },
+
+        _dump: function(data) {
+            return JSON.stringify(data, null, ' ');
+        }
+    });
+</script>

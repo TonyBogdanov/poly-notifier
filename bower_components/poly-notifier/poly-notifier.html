@@ -1,0 +1,382 @@
+<!-- Dependencies -->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../font-roboto/roboto.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../poly-behavior-translatable/poly-behavior-translatable.html">
+<link rel="import" href="../poly-vendor-font-awesome/poly-vendor-font-awesome.html">
+<link rel="import" href="../poly-quick-image/poly-quick-image.html">
+<link rel="import" href="poly-notifier-styles-shared.html">
+
+<!--
+`<poly-notifier>` provides a centralized way of delivering notifications on web–based environments.
+
+The element implements and can be internationalized via
+[`Poly.TranslatableBehavior`](https://github.com/TonyBogdanov/poly-behavior-translatable).
+
+The following entries need to be translated:
+
+| Key | Description |
+|-|-|
+| `Closing in %s` | Displayed for auto-closing notifications. `%s` will be replaced with the number of seconds left. |
+
+@demo
+-->
+<dom-module id="poly-notifier">
+    <template>
+        <style include="poly-notifier-styles"></style>
+
+        <div id="items">
+            <template is="dom-repeat" items="[[_items]]">
+                <div class="notification" id$="[[item.id]]">
+                    <div class="wrapper">
+                        <div class="sizer">
+                            <template is="dom-if" if="[[_hasHeader(item)]]">
+                                <div class="header">[[_closingText(item, _tick, translations)]]</div>
+                            </template>
+
+                            <div class="content" data-image$="[[item.image]]">
+                                <template is="dom-if" if="[[_hasImage(item)]]">
+                                    <div class="image">
+                                        <poly-quick-image src="[[item.image]]" sizing="cover"></poly-quick-image>
+                                    </div>
+                                </template>
+
+                                <template is="dom-if" if="[[_hasIcon(item)]]">
+                                    <div class="icon" style$="[[_iconStyle(item)]]">
+                                        <i class$="fa fa-[[item.icon]]"></i>
+                                    </div>
+                                </template>
+
+                                <div class="title">[[item.title]]</div>
+                                <div class="text">[[item.text]]</div>
+                            </div>
+
+                            <template is="dom-if" if="[[_hasActions(item)]]">
+                                <div class="actions">
+                                    <template is="dom-repeat" items="[[item.actions]]" as="action">
+                                        <button type="button" data-index$="[[index]]" on-tap="_actionTap">
+                                            <paper-ripple initial-opacity="0.1"></paper-ripple>
+                                            <span style$="[[_actionLabelStyle(item)]]">[[action.label]]</span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is:                             'poly-notifier',
+
+        behaviors:                      [
+            Poly.TranslatableBehavior
+        ],
+
+        properties:                     {
+            _items:                     {
+                type:                   Array,
+                value:                  []
+            },
+
+            _tick:                      {
+                type:                   Number,
+                value:                  0
+            },
+
+            /**
+             * `TRUE` if there are no active notifications.
+             */
+            empty:                      {
+                type:                   Boolean,
+                value:                  true,
+                readOnly:               true,
+                reflectToAttribute:     true
+            }
+        },
+
+        observers:                      [
+            '_update(_items.*)'
+        ],
+
+        _hashMap:                       'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890',
+        _locked:                        false,
+
+        _closingText:                   function(item) {
+            return this.translateWithFallback('Closing in %s', 'Closing in %s').replace(/%s/g,
+                    this._autoCloseRemaining(item));
+        },
+
+        _update:                        function() {
+            this._setEmpty(0 == this._items.length);
+            this.refresh();
+        },
+
+        _hash:                          function(value) {
+            var hash                    = '';
+            while(0 < value) {
+                hash                    = this._hashMap.substr(value % this._hashMap.length, 1) + hash;
+                value                   = Math.floor(value / this._hashMap.length);
+            }
+            return hash;
+        },
+
+        _hasImage:                      function(item) {
+            return item.image;
+        },
+
+        _hasIcon:                       function(item) {
+            return !item.image && item.icon;
+        },
+
+        _hasHeader:                     function(item) {
+            return item.autoclose;
+        },
+
+        _hasActions:                    function(item) {
+            return item.actions && 0 < item.actions.length;
+        },
+
+        _autoCloseRemaining:            function(item) {
+            return Math.max(0, Math.ceil(item.createdAt + (item.autoclose / 1000) - this._tick));
+        },
+
+        _actionLabelStyle:              function(item) {
+            return item.color ? 'color:' + item.color : null;
+        },
+
+        _iconStyle:                     function(item) {
+            return item.color ? 'background-color:' + item.color : null;
+        },
+
+        _lock:                          function(callback) {
+            if(!this._locked) {
+                this._locked            = true;
+                callback();
+            }
+        },
+
+        _unlock:                        function() {
+            this._locked                = false;
+        },
+
+        _traverseNotification:          function(element) {
+            if(!element) {
+                return false;
+            }
+            if(element.classList.contains('notification')) {
+                return element;
+            }
+            return this._traverseNotification(element.parentElement);
+        },
+
+        _actionTap:                     function(e) {
+            var notification            = this._traverseNotification(e.currentTarget);
+            var options                 = this._items[this.getIndex(notification.id)];
+            var action                  = options.actions[parseInt(e.currentTarget.getAttribute('data-index'))];
+
+            // quick actions
+            switch(true) {
+                case 'remove' === action.action:
+                    this.remove(notification.id);
+                    break;
+
+                case 'function' == typeof action.action:
+                    action.action.call(this, options, action);
+                    break;
+            }
+        },
+
+        ready:                          function() {
+            setInterval(function() {
+                this._tick              = Math.floor((new Date()).getTime() / 1000);
+            }.bind(this), 200);
+            this.listen(window, 'resize', 'refresh');
+        },
+
+        /**
+         * Refreshes the UI. Must be called whenever a layout change occurs.
+         *
+         * Automatically invoked on `window.resize`.
+         */
+        refresh:                        function() {
+            requestAnimationFrame(function() {
+                for(var i = 0, e, es = this.$.items.querySelectorAll('.notification');
+                    i < es.length && (e = es.item(i)); i++) {
+                    e.style.height      = e.classList.contains('collapse') ? 0 : e.querySelector('.sizer').clientHeight + 'px';
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Creates a notification based on the supplied prototype (`Object`) and returns a handle.
+         *
+         * Here's a list of all possible `options` entries:
+         *
+         * | Item | Description |
+         * |-|-|
+         * | `title` | Notification title. |
+         * | `text` | Notification text. |
+         * | `image` | Optional notification image URL. Takes precedence over `icon`. |
+         * | `icon` | Optional notification icon (instead of image). It must be a [FontAwesome](http://fontawesome.io/icons/) icon name, e.g. `globe`. |
+         * | `color` | Optional notification color. If not specified, one will be automatically chosen based on the contents. |
+         * | `actions` | Optional array of action buttons represented by an object (see below). |
+         * | `autoclose` | Optional number of milliseconds before the notification auto-closes. |
+         *
+         * A single `actions` object entry looks like this:
+         *
+         * ```
+         * {
+         *  "label": ... // the action button label
+         *  "action": ... // the action to be performed
+         * }
+         * ```
+         *
+         * The action to be performed can be a "quick action" string:
+         *
+         * `remove` - to remove the current notification.
+         *
+         * Or a `function`, which will be passed the `<poly-notifier>` element in the `this` context, the notification `options` object
+         * (used to create the notification) as second argument and the current action object
+         * (from `options.actions`) as third argument.
+         *
+         * ---
+         *
+         * Example:
+         *
+         * ```
+         * {
+         *  "title": "Error",
+         *  "text": "Please fill all fields."
+         * }
+         * ```
+         *
+         * The returned handle object exposes the following properties / methods:
+         *
+         * | Item | Description |
+         * |-|-|
+         * | `options` | The original `options` object used to create the notification also including some useful entries such as `id` and `createdAt`. |
+         * | `remove()` | Removes the notification |
+         *
+         * @param options
+         * @returns {{}}
+         */
+        create:                         function(options) {
+            options.id                  = 'n' + this._hash((new Date()).getTime());
+            options.createdAt           = this._tick;
+
+            this.unshift('_items', options);
+
+            if(options.autoclose) {
+                setTimeout(function() {
+                    this.removeInsist(options.id);
+                }.bind(this), options.autoclose);
+            }
+
+            return {
+                options:                options,
+                remove:                 function() {
+                    this.remove(options.id);
+                }.bind(this)
+            };
+        },
+
+        /**
+         * Retrieves the notification's index in the `_items` array based on the supplied notification ID.
+         *
+         * Returns `FALSE` on failure.
+         *
+         * @param id
+         * @returns {*}
+         */
+        getIndex:                       function(id) {
+            for(var i = 0; i < this._items.length; i++) {
+                if(id == this._items[i].id) {
+                    return i;
+                }
+            }
+            return false;
+        },
+
+        /**
+         * Removes the notification with the specified ID.
+         *
+         * @param id
+         */
+        remove:                         function(id) {
+            this._lock(function() {
+                var index               = this.getIndex(id);
+                if(false === index) {
+                    this._unlock();
+                    return;
+                }
+
+                this.$$('#' + id).classList.add('collapse');
+                this.refresh();
+
+                setTimeout(function() {
+                    this.splice('_items', index, 1);
+                    this._unlock();
+                }.bind(this), 350);
+            }.bind(this));
+        },
+
+        /**
+         * Same as `remove()` except it will not fail if the element is locked, but will continue trying
+         * until it succeeds.
+         *
+         * @param id
+         */
+        removeInsist:                   function(id) {
+            if(this._locked) {
+                requestAnimationFrame(function() {
+                    this.removeInsist(id);
+                }.bind(this));
+            }
+            this.remove(id);
+        },
+
+        /**
+         * Removes all current notifications.
+         */
+        removeAll:                      function() {
+            if(!this._items.length) {
+                return;
+            }
+            this._lock(function() {
+                for(var index in this._items) {
+                    this.$$('#' + this._items[index].id).classList.add('collapse');
+                }
+
+                this.refresh();
+
+                setTimeout(function() {
+                    this._items         = [];
+                    this._unlock();
+                }.bind(this), 350);
+            }.bind(this));
+        },
+
+        /**
+         * Removes the notification at the beginning of the queue (the oldest).
+         */
+        removeOldest:                   function() {
+            if(this._items.length) {
+                this.remove(this._items[this._items.length - 1].id);
+            }
+        },
+
+        /**
+         * Removes the notification at the end of the queue (the newest).
+         */
+        removeNewest:                   function() {
+            if(this._items.length) {
+                this.remove(this._items[0].id);
+            }
+        }
+    });
+</script>
